@@ -7,7 +7,7 @@ from organisation.models.organisations import *
 from organisation.serializers.organisations import pages,groups,employees
 from drf_spectacular.utils import extend_schema_view,extend_schema
 
-from organisation.permissions import IsMyOrganisation,IsColleagues
+from organisation.permissions import IsMyOrganisation,IsColleagues,IsMyGroups
 from django.db.models import Count
 
 from organisation.filters import MyOrganisation,OwnedByOrganisation,MyGroup,MyEmployee
@@ -33,7 +33,7 @@ class PageMyView(generics.ListAPIView):
 class GroupListCreateView(generics.ListCreateAPIView):
     queryset = Group.objects.all()
     serializer_class = groups.GroupListSerializer
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsMyGroups,]
     pagination_class = None
 
     filter_backends = (
@@ -52,7 +52,7 @@ class GroupListCreateView(generics.ListCreateAPIView):
 class GroupRetriveView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Group.objects.all()
     # serializer_class = OrganisationSerializer
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsMyGroups,]
     pagination_class = None
     http_method_names = ('get','patch','delete')
 
