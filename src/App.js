@@ -1,24 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header';
+import Group from './pages/Group';
+import Employee from './pages/Employee';
+
+import { Route,Routes,BrowserRouter } from "react-router-dom";
+import LoginPage from './pages/LoginPage';
+
+import ProtectedRoute from './utils/ProtectedRoute';
+import { AuthProvider } from './utils/AuthContext';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    // <AuthProvider>
+      <BrowserRouter>
+        <div className="App">
+          <Header />
+
+          <Routes>
+            <Route path='/' element={<Group/>}/>
+            <Route path='/employees' element={<Employee/>}/>
+
+              {/* <Route path='/' element={<ProtectedRoute/>}> */}
+                {/* <Route path='/' element={<Group/>}/> */}
+                {/* <Route path='/' element={<Group/>}/> */}
+
+                {/* <Route path='/employees' element={<Employee/>}/> */}
+              {/* </Route> */}
+              
+              {/* <Route path='/register' element={<Register/>}/> */}
+              {/* <Route path='/login' element={<LoginPage/>}/> */}
+
+          </Routes>
+          
+        </div>
+      </BrowserRouter>
+    // </AuthProvider>
   );
 }
 
