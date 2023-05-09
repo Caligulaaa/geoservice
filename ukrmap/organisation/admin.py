@@ -2,6 +2,7 @@ from django.contrib import admin
 
 
 from organisation.models.organisations import *
+from organisation.models.geoobjects import GeoObject,GeoInfo
 
 
 #########################################
@@ -28,3 +29,16 @@ class GroupAdmin(admin.ModelAdmin):
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
     pass
+
+#######################################
+##  GEOMETRY + INFO
+#######################################
+@admin.register(GeoObject)
+class GeoObjectAdmin(admin.ModelAdmin):
+    # readonly_fields = ('created_at','created_by','updated_at','update_by')
+    pass
+
+# INFO
+@admin.register(GeoInfo)
+class GeoInfoAdmin(admin.ModelAdmin):
+    readonly_fields = ('created_at','created_by','updated_at','update_by')
