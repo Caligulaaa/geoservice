@@ -39,3 +39,6 @@ class PageShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = ('name',)
+
+class GeoInfoMixin(serializers.ModelSerializer):
+    pass
