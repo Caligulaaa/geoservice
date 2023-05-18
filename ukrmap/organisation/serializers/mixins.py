@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from user.models.users import User
 from organisation.models.organisations import Page,Employee
+from organisation.models.geoobjects import GeoInfo
 
 class ExtendedModelSerializer(serializers.ModelSerializer):
 
@@ -41,4 +42,8 @@ class PageShortSerializer(serializers.ModelSerializer):
         fields = ('name',)
 
 class GeoInfoMixin(serializers.ModelSerializer):
-    pass
+    
+    class Meta:
+        model = GeoInfo
+        fields = ('name',"description",'group')
+        # read_only_fields = ("created_at","updated_at","created_by","update_by")

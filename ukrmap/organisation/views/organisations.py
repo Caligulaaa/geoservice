@@ -1,6 +1,7 @@
 
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema_view,extend_schema
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.permissions import AllowAny,IsAuthenticated,IsAdminUser
 from organisation.models.organisations import *
@@ -25,6 +26,7 @@ class PageMyView(generics.ListAPIView):
         MyOrganisation,
     )
 
+
 ###############################
 ## GROUP
 #################################
@@ -38,8 +40,10 @@ class GroupListCreateView(generics.ListCreateAPIView):
 
     filter_backends = (
         MyGroup,
-    )
+        DjangoFilterBackend,
 
+    )
+    filterset_fields = ('name',)
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return groups.GroupListSerializer

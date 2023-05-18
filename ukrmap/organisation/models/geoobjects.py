@@ -25,5 +25,6 @@ class GeoObject(GeoModels.Model):
         verbose_name_plural = 'geoObjects'
         ordering = ('info__group',)
 
+    
     def __str__(self):
-        return str(self.info.name) + " - " + str(self.info.group.name)
+        return str(self.id) + "-ID |||" + str(self.info.name) + " - " + str(self.info.group.name)

@@ -71,6 +71,10 @@ class OrganisationCreateEmployeeSerializer(serializers.ModelSerializer):
     #  перевірка перед створенням користувача організації 
     #  чи є власником організації
     def validate(self,attrs):
+        role = ['admin','manager','member']
+
+        if attrs not in role:
+            raise serializers.ValidationError({"role": "error role"})
 
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})

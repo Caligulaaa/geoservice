@@ -1,5 +1,6 @@
 from django.urls import path
 from organisation.views.organisations import *
+from organisation.views.geoobjects import *
 
 
 urlpatterns = [
@@ -11,5 +12,8 @@ urlpatterns = [
     # GROUP
     path('mypage/groups/',GroupListCreateView.as_view(),name='groups' ),
     path('mypage/group/<int:pk>',GroupRetriveView.as_view(),name='retr_group' ),
+    # GEOMETRY
+    path('mypage/geometrys',GeometryListCreateView.as_view(),name='geometry' ),
+
 
 ]
