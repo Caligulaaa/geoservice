@@ -30,7 +30,7 @@ class PageMyView(generics.ListAPIView):
 ###############################
 ## GROUP
 #################################
-@extend_schema_view(get=extend_schema(summary='all groups',tags=['Groups']),
+@extend_schema_view(get=extend_schema(description='informations about group get',summary='all groups',tags=['Groups']),
                     post=extend_schema(summary='create group',tags=['Groups']),)
 class GroupListCreateView(generics.ListCreateAPIView):
     queryset = Group.objects.all()

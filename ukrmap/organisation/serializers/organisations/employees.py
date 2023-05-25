@@ -73,7 +73,7 @@ class OrganisationCreateEmployeeSerializer(serializers.ModelSerializer):
     def validate(self,attrs):
         role = ['admin','manager','member']
 
-        if attrs not in role:
+        if attrs['role'] not in role:
             raise serializers.ValidationError({"role": "error role"})
 
         if attrs['password'] != attrs['password2']:

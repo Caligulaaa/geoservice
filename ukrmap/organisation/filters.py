@@ -11,6 +11,7 @@ class MyEmployee(BaseFilterBackend):
             )
 
 
+
 class OwnedByOrganisation(BaseFilterBackend):
     def filter_queryset(self,request,queryset,view):
         org_id = request.parser_context['kwargs'].get('id_organisation')
@@ -31,4 +32,16 @@ class MyGroup(BaseFilterBackend):
         user = request.user
         return queryset.filter(
             page__employees=user
+            )
+    
+class GeometrysForGroup(BaseFilterBackend):
+    def filter_queryset(self,request,queryset,view):
+        group_id = request.parser_context['kwargs'].get('id_group')
+        return queryset.filter(info__group_id=group_id)
+    
+class MyGeometryGroup(BaseFilterBackend):
+    def filter_queryset(self,request,queryset,view):
+        user = request.user
+        return queryset.filter(
+            info__group__page__employees=user
             )

@@ -21,13 +21,54 @@ class GeometryListSerializer(GeoFeatureModelSerializer):
         # bbox_geo_field = 'bbox_geometry'
         fields = ('id','info',)
 
+####################
+#   RETRIVE GEOMETRY
+#####################
+class GeometryRetriveSerializer(GeoFeatureModelSerializer):
+    info = GeoInfoMixin()
+    class Meta:
+        model = GeoObject
+        geo_field = "geometry"
+        id_field=False
+        fields = ('id','info',)
+
 ########################
 #   CREATE GEOMETRY
 #######################
 class GeometryCreateSerializer(GeoFeatureModelSerializer):
-    # group = serializers.IntegerField(write_only=True)
-    # name = serializers.CharField(write_only=True)
-    # description = serializers.CharField(write_only=True)
+    info = GeoInfoMixin()
+    class Meta:
+        model = GeoObject
+        geo_field = "geometry"
+        id_field=False
+        # auto_bbox = True
+        # bbox_geo_field = 'bbox_geometry'
+        # fields = ('group','name','description',)
+        fields = ('id','info',)
+
+
+    def create(self, validated_data):
+        group_id =self.context['view'].kwargs.get('id_group')
+        with transaction.atomic():
+            group_name = Group.objects.filter(
+                id=group_id).first()
+
+            if not group_name:
+                raise serializers.ValidationError({"error": "group not found"})
+
+            geoinfo = GeoInfo.objects.create(
+                group = group_name,
+                description = validated_data['info']['description'],
+                name = validated_data['info']['name']
+                )
+            geoinfo.save()
+            geoobject = GeoObject.objects.create(info=geoinfo,geometry=validated_data['geometry'])
+        return geoobject
+    
+########################
+#   UPDATE GEOMETRY
+#######################
+class GeometryUpdateSerializer(GeoFeatureModelSerializer):
     info = GeoInfoMixin()
     class Meta:
         model = GeoObject
@@ -39,25 +80,18 @@ class GeometryCreateSerializer(GeoFeatureModelSerializer):
         fields = ('info',)
 
 
-    def create(self, validated_data):
+    def update(self, validated_data):
+        info_data = validated_data.pop('info') if 'info' in validated_data else None
         with transaction.atomic():
-            # group_name = Group.objects.filter(
-            #     id=self.context['view'].kwargs.get('pk')).first()
-        
-            group_name = Group.objects.filter(
-                id=34).first()
-        
+            instance = super().update(instance,validated_data)
 
-        #     # # pdb.set_trace()
-        #     # if not group_name:
-        #     #     raise serializers.ValidationError({"error": "group not found"})
+            if info_data:
+                info = instance.info
 
-            geoinfo = GeoInfo.objects.create(
-                group = group_name,
-                description = validated_data['info']['description'],
-                name = validated_data['info']['name']
-                )
-            geoinfo.save()
-            print(validated_data['geometry'])
-            geoobject = GeoObject.objects.create(info=geoinfo,geometry=validated_data['geometry'])
-        return geoobject
+                geometry_serializer = GeoInfoMixin(instance=info,
+                                                    data=info_data,
+                                                    partial=True) # дозволено частковий апдейт
+                geometry_serializer.is_valid(raise_exception=True)
+                geometry_serializer.save()
+
+        return instance
